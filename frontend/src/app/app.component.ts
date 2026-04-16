@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, isDevMode } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 
@@ -35,9 +35,8 @@ interface PendingMutation {
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private static readonly ANGULAR_DEV_SERVER_PORT = '4200';
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = window.location.port === AppComponent.ANGULAR_DEV_SERVER_PORT
+  private readonly apiUrl = isDevMode()
     ? 'http://localhost:8080/api/notes'
     : '/api/notes';
   private readonly notesCacheKey = 'file-notes-cache-v1';
