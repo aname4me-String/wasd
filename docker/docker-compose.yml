@@ -21,6 +21,39 @@ services:
     networks:
       - wasd_db
 
+  couchbase-init:
+    image: couchbase:community
+    depends_on:
+      couchbase:
+        condition: service_healthy
+    environment:
+      COUCHBASE_USER: ${COUCHBASE_USER}
+      COUCHBASE_PASSWORD: ${COUCHBASE_PASSWORD}
+      COUCHBASE_BUCKET: ${COUCHBASE_BUCKET}
+    entrypoint: ["/bin/sh", "-ec"]
+    command: >
+      until curl --fail --silent http://couchbase:8091/pools >/dev/null; do sleep 2; done;
+      if ! curl --fail --silent --user "$${COUCHBASE_USER}:$${COUCHBASE_PASSWORD}" http://couchbase:8091/pools/default >/dev/null; then
+        couchbase-cli cluster-init -c couchbase:8091
+        --cluster-username "$${COUCHBASE_USER}"
+        --cluster-password "$${COUCHBASE_PASSWORD}"
+        --services data,index,query
+        --cluster-ramsize 512
+        --cluster-index-ramsize 256;
+      fi;
+      until curl --fail --silent --user "$${COUCHBASE_USER}:$${COUCHBASE_PASSWORD}" http://couchbase:8091/pools/default >/dev/null; do sleep 2; done;
+      if ! couchbase-cli bucket-list -c couchbase:8091 -u "$${COUCHBASE_USER}" -p "$${COUCHBASE_PASSWORD}" | grep -Fxq "$${COUCHBASE_BUCKET}"; then
+        couchbase-cli bucket-create -c couchbase:8091
+        -u "$${COUCHBASE_USER}" -p "$${COUCHBASE_PASSWORD}"
+        --bucket "$${COUCHBASE_BUCKET}"
+        --bucket-type couchbase
+        --bucket-ramsize 256
+        --wait;
+      fi
+    restart: "no"
+    networks:
+      - wasd_db
+
   backend:
     build:
       context: ../backend/
@@ -36,8 +69,8 @@ services:
     ports:
       - "${BACKEND_PORT:-8080}:8080"
     depends_on:
-      couchbase:
-        condition: service_healthy
+      couchbase-init:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"]
       interval: 10s
