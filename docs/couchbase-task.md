@@ -5,7 +5,9 @@
 - Docker Compose liegt unter `./docker/docker-compose.yml`.
 - Start:
   - `cp ./docker/example.env ./docker/.env`
+  - Optional reset on credential changes: `rm -rf ./docker/couchbase-data`
   - `cd ./docker && docker compose up --build`
+- Die Compose-Umgebung initialisiert den Couchbase-Cluster und den Bucket `notes` automatisch beim Start.
 - Couchbase UI: `http://<HOST_ODER_PUBLIC_IP>:8091`
 - Für verteilte Architektur kann ein Host mit öffentlicher IP genutzt werden; Backend verbindet sich über `COUCHBASE_CONNECTION_STRING`.
 

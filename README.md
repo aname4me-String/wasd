@@ -20,8 +20,10 @@ Each folder has its own `.gitignore`.
 
 1. Copy env example:
    - `cp ./docker/example.env ./docker/.env`
+   - If you previously started the stack with different Couchbase credentials, reset persisted data once with `rm -rf ./docker/couchbase-data`
 2. Start stack:
    - `cd ./docker && docker compose up --build`
+   - Couchbase cluster and the `notes` bucket are initialized automatically during startup.
 3. Open:
    - Frontend: `http://localhost`
    - Backend health: `http://localhost:8080/actuator/health`
