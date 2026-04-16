@@ -5,6 +5,7 @@ import com.example.backend.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,9 @@ public class NoteService {
     }
 
     public List<NoteDocument> findAll() {
-        return noteRepository.findAll();
+        return noteRepository.findAll().stream()
+                .sorted(Comparator.comparing(NoteDocument::getUpdatedAt, Comparator.nullsLast(Comparator.reverseOrder())))
+                .toList();
     }
 
     public NoteDocument create(NoteDocument note) {
@@ -33,6 +36,8 @@ public class NoteService {
 
         existing.setTitle(note.getTitle());
         existing.setContent(note.getContent());
+        existing.setSourceFileName(note.getSourceFileName());
+        existing.setContentType(note.getContentType());
         existing.setUpdatedAt(Instant.now());
 
         return noteRepository.save(existing);

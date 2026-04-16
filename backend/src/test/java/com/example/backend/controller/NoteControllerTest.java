@@ -29,7 +29,15 @@ class NoteControllerTest {
 
     @Test
     void shouldReturnNotes() throws Exception {
-        NoteDocument note = new NoteDocument("1", "first", "hello", 2L, Instant.parse("2026-01-01T00:00:00Z"));
+        NoteDocument note = new NoteDocument(
+                "1",
+                "first",
+                "hello",
+                "hello.txt",
+                "text/plain",
+                2L,
+                Instant.parse("2026-01-01T00:00:00Z")
+        );
         when(noteService.findAll()).thenReturn(List.of(note));
 
         mockMvc.perform(get("/api/notes"))

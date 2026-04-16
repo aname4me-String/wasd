@@ -40,6 +40,8 @@ public class NoteController {
         NoteDocument document = new NoteDocument();
         document.setTitle(request.title());
         document.setContent(request.content());
+        document.setSourceFileName(request.sourceFileName());
+        document.setContentType(request.contentType());
         return NoteResponse.from(noteService.create(document));
     }
 
@@ -48,6 +50,8 @@ public class NoteController {
         NoteDocument document = new NoteDocument();
         document.setTitle(request.title());
         document.setContent(request.content());
+        document.setSourceFileName(request.sourceFileName());
+        document.setContentType(request.contentType());
         return NoteResponse.from(noteService.update(id, document));
     }
 
@@ -56,11 +60,27 @@ public class NoteController {
         noteService.delete(id);
     }
 
-    public record NoteRequest(@NotBlank String title, String content) {}
+    public record NoteRequest(@NotBlank String title, String content, String sourceFileName, String contentType) {}
 
-    public record NoteResponse(String id, String title, String content, Long version, Instant updatedAt) {
+    public record NoteResponse(
+            String id,
+            String title,
+            String content,
+            String sourceFileName,
+            String contentType,
+            Long version,
+            Instant updatedAt
+    ) {
         static NoteResponse from(NoteDocument doc) {
-            return new NoteResponse(doc.getId(), doc.getTitle(), doc.getContent(), doc.getVersion(), doc.getUpdatedAt());
+            return new NoteResponse(
+                    doc.getId(),
+                    doc.getTitle(),
+                    doc.getContent(),
+                    doc.getSourceFileName(),
+                    doc.getContentType(),
+                    doc.getVersion(),
+                    doc.getUpdatedAt()
+            );
         }
     }
 }

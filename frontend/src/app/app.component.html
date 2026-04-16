@@ -1,32 +1,61 @@
 <main class="container">
-  <h1>Couchbase Notes Prototype</h1>
-
-  <form (ngSubmit)="saveNote()" class="note-form">
-    <label>
-      Title
-      <input name="title" [(ngModel)]="title" required />
-    </label>
-
-    <label>
-      Content
-      <textarea name="content" [(ngModel)]="content"></textarea>
-    </label>
-
-    <div class="actions">
-      <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
-      <button type="button" (click)="resetForm()" *ngIf="editingId">Cancel</button>
+  <header class="hero">
+    <h1>File Notes Studio</h1>
+    <p>Create, edit, and delete file-based notes with automatic offline sync.</p>
+    <div class="status-row">
+      <span class="badge" [class.offline]="!isOnline">{{ isOnline ? 'Online' : 'Offline' }}</span>
+      <span class="queue" *ngIf="pendingCount > 0">{{ pendingCount }} queued change(s)</span>
+      <span class="message" *ngIf="syncMessage">{{ syncMessage }}</span>
     </div>
-  </form>
+  </header>
 
-  <ul class="notes">
-    <li *ngFor="let note of notes">
+  <section class="panel">
+    <form (ngSubmit)="saveNote()" class="note-form">
+      <div class="field-grid">
+        <label>
+          Title
+          <input name="title" [(ngModel)]="title" required />
+        </label>
+
+        <label>
+          File name
+          <input name="sourceFileName" [(ngModel)]="sourceFileName" placeholder="example.txt" />
+        </label>
+
+        <label>
+          Content type
+          <input name="contentType" [(ngModel)]="contentType" placeholder="text/plain" />
+        </label>
+      </div>
+
+      <label class="file-picker">
+        Select file
+        <input type="file" (change)="onFileSelected($event)" />
+      </label>
+
+      <label>
+        Content
+        <textarea name="content" [(ngModel)]="content" rows="10"></textarea>
+      </label>
+
+      <div class="actions">
+        <button type="submit">{{ editingId ? 'Update file note' : 'Add file note' }}</button>
+        <button type="button" (click)="resetForm()" *ngIf="editingId">Cancel edit</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="notes-grid">
+    <article class="note-card" *ngFor="let note of notes">
       <h2>{{ note.title }}</h2>
-      <p>{{ note.content }}</p>
-      <small>Version: {{ note.version }} | Updated: {{ note.updatedAt }}</small>
+      <p class="meta" *ngIf="note.sourceFileName">File: {{ note.sourceFileName }}</p>
+      <p class="meta" *ngIf="note.contentType">Type: {{ note.contentType }}</p>
+      <pre>{{ note.content }}</pre>
+      <small>Version: {{ note.version }} · Updated: {{ note.updatedAt | date:'medium' }}</small>
       <div class="actions">
         <button type="button" (click)="edit(note)">Edit</button>
-        <button type="button" (click)="delete(note.id)">Delete</button>
+        <button type="button" class="danger" (click)="delete(note.id)">Delete</button>
       </div>
-    </li>
-  </ul>
+    </article>
+  </section>
 </main>
