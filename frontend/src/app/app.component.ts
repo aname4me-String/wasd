@@ -37,8 +37,8 @@ interface PendingMutation {
 export class AppComponent implements OnInit, OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:8080/api/notes';
-  private readonly notesCacheKey = 'wasd-notes-cache-v1';
-  private readonly queueCacheKey = 'wasd-pending-queue-v1';
+  private readonly notesCacheKey = 'file-notes-cache-v1';
+  private readonly queueCacheKey = 'file-notes-pending-queue-v1';
   private syncing = false;
 
   notes: Note[] = [];
@@ -211,7 +211,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private createTempId(): string {
-    return `tmp-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+    return `tmp-${crypto.randomUUID()}`;
   }
 
   private applyLocalCreate(id: string, payload: NotePayload): void {
@@ -362,8 +362,16 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private isOfflineError(error: unknown): boolean {
-    const candidate = error as { status?: number };
-    return !navigator.onLine || candidate?.status === 0;
+    if (!navigator.onLine) {
+      return true;
+    }
+
+    if (typeof error !== 'object' || error === null || !('status' in error)) {
+      return false;
+    }
+
+    const status = (error as { status?: unknown }).status;
+    return typeof status === 'number' && status === 0;
   }
 
   private remapQueueWithResolvedIds(queue: PendingMutation[], idMap: Map<string, string>): PendingMutation[] {
