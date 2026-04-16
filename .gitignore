@@ -1,0 +1,3 @@
+# Root-only ignore rules
+.DS_Store
+Thumbs.db

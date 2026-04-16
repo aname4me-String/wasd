@@ -1,0 +1,32 @@
+<main class="container">
+  <h1>Couchbase Notes Prototype</h1>
+
+  <form (ngSubmit)="saveNote()" class="note-form">
+    <label>
+      Title
+      <input name="title" [(ngModel)]="title" required />
+    </label>
+
+    <label>
+      Content
+      <textarea name="content" [(ngModel)]="content"></textarea>
+    </label>
+
+    <div class="actions">
+      <button type="submit">{{ editingId ? 'Update' : 'Create' }}</button>
+      <button type="button" (click)="resetForm()" *ngIf="editingId">Cancel</button>
+    </div>
+  </form>
+
+  <ul class="notes">
+    <li *ngFor="let note of notes">
+      <h2>{{ note.title }}</h2>
+      <p>{{ note.content }}</p>
+      <small>Version: {{ note.version }} | Updated: {{ note.updatedAt }}</small>
+      <div class="actions">
+        <button type="button" (click)="edit(note)">Edit</button>
+        <button type="button" (click)="delete(note.id)">Delete</button>
+      </div>
+    </li>
+  </ul>
+</main>

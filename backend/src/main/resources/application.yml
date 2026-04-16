@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: backend
+  couchbase:
+    connection-string: ${COUCHBASE_CONNECTION_STRING:couchbase://localhost}
+    username: ${COUCHBASE_USERNAME:Administrator}
+    password: ${COUCHBASE_PASSWORD:password123}
+  data:
+    couchbase:
+      bucket-name: ${COUCHBASE_BUCKET:notes}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
