@@ -35,8 +35,9 @@ interface PendingMutation {
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit, OnDestroy {
+  private static readonly ANGULAR_DEV_SERVER_PORT = '4200';
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = window.location.port === '4200'
+  private readonly apiUrl = window.location.port === AppComponent.ANGULAR_DEV_SERVER_PORT
     ? 'http://localhost:8080/api/notes'
     : '/api/notes';
   private readonly notesCacheKey = 'file-notes-cache-v1';
