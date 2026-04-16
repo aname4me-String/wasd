@@ -3,8 +3,8 @@
 ## Fixed folder structure
 
 Root contains only:
-- `/home/runner/work/wasd/wasd/.gitignore`
-- `/home/runner/work/wasd/wasd/README.md`
+- `./.gitignore`
+- `./README.md`
 - folders (`backend`, `frontend`, `docker`, `docs`)
 
 Each folder has its own `.gitignore`.
@@ -19,9 +19,9 @@ Each folder has its own `.gitignore`.
 ## Quick start
 
 1. Copy env example:
-   - `cp /home/runner/work/wasd/wasd/docker/example.env /home/runner/work/wasd/wasd/docker/.env`
+   - `cp ./docker/example.env ./docker/.env`
 2. Start stack:
-   - `cd /home/runner/work/wasd/wasd/docker && docker compose up --build`
+   - `cd ./docker && docker compose up --build`
 3. Open:
    - Frontend: `http://localhost`
    - Backend health: `http://localhost:8080/actuator/health`
@@ -35,4 +35,4 @@ Each folder has its own `.gitignore`.
 - `DELETE /api/notes/{id}`
 
 Detailed documentation:
-- `/home/runner/work/wasd/wasd/docs/couchbase-task.md`
+- `./docs/couchbase-task.md`

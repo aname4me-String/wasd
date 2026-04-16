@@ -2,10 +2,10 @@
 
 ## 1) Installation und Bereitstellung der Couchbase Instanz
 
-- Docker Compose liegt unter `/home/runner/work/wasd/wasd/docker/docker-compose.yml`.
+- Docker Compose liegt unter `./docker/docker-compose.yml`.
 - Start:
-  - `cp /home/runner/work/wasd/wasd/docker/example.env /home/runner/work/wasd/wasd/docker/.env`
-  - `cd /home/runner/work/wasd/wasd/docker && docker compose up --build`
+  - `cp ./docker/example.env ./docker/.env`
+  - `cd ./docker && docker compose up --build`
 - Couchbase UI: `http://<HOST_ODER_PUBLIC_IP>:8091`
 - Für verteilte Architektur kann ein Host mit öffentlicher IP genutzt werden; Backend verbindet sich über `COUCHBASE_CONNECTION_STRING`.
 
@@ -25,13 +25,13 @@
 
 ## 4) Implementierung und Dokumentation der CRUD Funktionen
 
-Backend (`/backend`) stellt bereit:
+Backend (`backend/`) stellt bereit:
 - `GET /api/notes` – Read alle Dokumente
 - `POST /api/notes` – Create
 - `PUT /api/notes/{id}` – Update
 - `DELETE /api/notes/{id}` – Delete
 
-Frontend (`/frontend`) bietet einen einfachen Prototyp zur Bedienung dieser CRUD-Endpunkte.
+Frontend (`frontend/`) bietet einen einfachen Prototyp zur Bedienung dieser CRUD-Endpunkte.
 
 ## 5) Erweiterte Anforderungen
 
